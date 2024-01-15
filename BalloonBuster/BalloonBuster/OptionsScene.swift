@@ -28,7 +28,7 @@ class OptionsScene: SKScene {
          }
     }
     
-    func changeScene(){
+    func changeScene() {
         let secondScene = GameScene(size: self.size)
         secondScene.scaleMode = scaleMode
         let transition = SKTransition.fade(withDuration: 0.5)
