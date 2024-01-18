@@ -12,7 +12,19 @@ class GameScene: SKScene {
     let imageNames = [String(0)]
     var inUseXpoints = [String : CGFloat]()
     var queue: [CGFloat] = []
+    let confettiSpriteNode = SKSpriteNode(imageNamed: "giphy-0")
+    var confettiFrames = [SKTexture]()
+    
     override func didMove(to view : SKView) {
+        confettiSpriteNode.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        confettiSpriteNode.size = CGSize.init(width: self.frame.size.width , height: self.frame.size.height);
+        confettiSpriteNode.zPosition = -1;
+        addChild(confettiSpriteNode);
+        confettiSpriteNode.isHidden = true;
+        let textureAtlas = SKTextureAtlas(named: "Confetti-Frame")
+        for index in 0..<20 {
+            confettiFrames.append(textureAtlas.textureNamed("giphy-"+String(index)))
+        }
         self.backgroundColor = UIColor.white
         populateXPoints()
         for index in 0..<imageNames.count {
@@ -48,17 +60,27 @@ class GameScene: SKScene {
                 return
             }
             let location = touch.location(in: self)
-            
             let touchedNodes = nodes(at: location)
         for index in 0..<touchedNodes.count {
+            if imageNames.contains(touchedNodes[index].name ?? "") {
             touchedNodes[index].removeAllActions();
             let imageName = touchedNodes[index].name
             let xPoint = inUseXpoints[imageName!]
             queue.append(xPoint!)
-            let nextXpoint = queue.removeFirst();
+                let pointIndex = Int.random(in: 0...queue.count-1)
+            let nextXpoint = queue.remove(at: pointIndex );
+                handleBurst()
             inUseXpoints[imageName!] = nextXpoint;
             touchedNodes[index].position = CGPoint(x: nextXpoint, y: frame.minY-100)
             attachMoveAction(texture: touchedNodes[index], xPoint: nextXpoint)
         }
+        }
 }
+    func handleBurst(){
+        self.confettiSpriteNode.isHidden = false;
+        confettiSpriteNode.run(SKAction.sequence([SKAction.animate(with: confettiFrames, timePerFrame: 0.1), SKAction.run {
+            self.confettiSpriteNode.isHidden=true
+            self.confettiSpriteNode.removeAllActions()
+        }]))
+    }
 }

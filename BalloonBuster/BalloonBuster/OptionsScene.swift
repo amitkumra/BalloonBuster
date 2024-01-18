@@ -10,12 +10,17 @@ import SpriteKit
 class OptionsScene: SKScene {
     let firstNode = SKNode()
     let buttonNode = SKLabelNode(text: "START");
-   
+    let backgroundNode = SKSpriteNode(imageNamed: "background")
     override func didMove(to view : SKView) {
-        self.backgroundColor = UIColor.red
+       // self.backgroundColor = UIColor.red
+        backgroundNode.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        backgroundNode.size = CGSize.init(width: self.frame.size.width , height: self.frame.size.height);
+        backgroundNode.zPosition = -1;
+        addChild(backgroundNode);
+        buttonNode.color = UIColor.red
         buttonNode.name = "START"
         addChild(buttonNode);
-        buttonNode.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        buttonNode.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 100)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
