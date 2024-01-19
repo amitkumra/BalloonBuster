@@ -54,7 +54,12 @@ class GameScene: SKScene {
         let yPoint = CGFloat(Int.random(in: 50...100))
         texture.run(SKAction.repeatForever(SKAction.sequence([SKAction.move(to: CGPoint(x: xPoint, y: frame.maxY+100), duration: 1),
                                                     SKAction.run {
-            texture.position = CGPoint(x: xPoint, y: self.frame.minY-yPoint)
+            let imageName = texture.name
+            let xPoint = self.inUseXpoints[imageName!]
+            self.queue.append(xPoint!)
+            let pointIndex = Int.random(in: 0...self.queue.count-1)
+            let nextXpoint = self.queue.remove(at: pointIndex );
+            texture.position = CGPoint(x: nextXpoint, y: self.frame.minY-yPoint)
         }
             ])))
     }
