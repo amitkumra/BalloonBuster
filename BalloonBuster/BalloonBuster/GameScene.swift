@@ -9,7 +9,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     let firstNode = SKNode()
-    let imageNames = [String(0)]
+    let imageNames = [String(0),String(1),String(2),String(3),String(4)]
     var inUseXpoints = [String : CGFloat]()
     var queue: [CGFloat] = []
     let confettiSpriteNode = SKSpriteNode(imageNamed: "giphy-0")
@@ -25,16 +25,19 @@ class GameScene: SKScene {
         for index in 0..<20 {
             confettiFrames.append(textureAtlas.textureNamed("giphy-"+String(index)))
         }
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor(red: 0.5843137254901961, green: 0.9803921568627451, blue: 0.7372549019607844, alpha: 1.00)
         populateXPoints()
         for index in 0..<imageNames.count {
             let imageName = String(index)
            let ballonTexture =  SKSpriteNode(imageNamed: imageName)
             ballonTexture.name = imageName;
             addChild(ballonTexture)
-            let xPoint = queue.removeFirst()
+           // let xPoint = queue.removeFirst()
+            let pointIndex = Int.random(in: 0...queue.count-1)
+            let xPoint = queue.remove(at: pointIndex );
             inUseXpoints[imageName] = xPoint
-            ballonTexture.position = CGPoint(x: xPoint, y: frame.minY-100)
+            let yPoint = CGFloat(Int.random(in: 50...100))
+            ballonTexture.position = CGPoint(x: xPoint, y: frame.minY-yPoint)
             attachMoveAction(texture: ballonTexture, xPoint: xPoint)
         }
     }
@@ -48,9 +51,10 @@ class GameScene: SKScene {
     }
     
     func attachMoveAction(texture: SKNode, xPoint: CGFloat){
+        let yPoint = CGFloat(Int.random(in: 50...100))
         texture.run(SKAction.repeatForever(SKAction.sequence([SKAction.move(to: CGPoint(x: xPoint, y: frame.maxY+100), duration: 1),
                                                     SKAction.run {
-            texture.position = CGPoint(x: xPoint, y: self.frame.minY-100)
+            texture.position = CGPoint(x: xPoint, y: self.frame.minY-yPoint)
         }
             ])))
     }
@@ -71,7 +75,8 @@ class GameScene: SKScene {
             let nextXpoint = queue.remove(at: pointIndex );
                 handleBurst()
             inUseXpoints[imageName!] = nextXpoint;
-            touchedNodes[index].position = CGPoint(x: nextXpoint, y: frame.minY-100)
+                let yPoint = CGFloat(Int.random(in: 50...100))
+            touchedNodes[index].position = CGPoint(x: nextXpoint, y: frame.minY-yPoint)
             attachMoveAction(texture: touchedNodes[index], xPoint: nextXpoint)
         }
         }
