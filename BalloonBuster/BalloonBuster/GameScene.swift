@@ -43,9 +43,11 @@ class GameScene: SKScene {
     }
     
     func populateXPoints(){
-        let totalWidth = self.frame.maxX - self.frame.minX;
+        let minX = self.frame.minX + 50;
+        let maxX = self.frame.maxX - 50;
+        let totalWidth = maxX - minX;
         for index in 1..<9 {
-            let xPoint = self.frame.minX + (totalWidth * CGFloat(index)/8)
+            let xPoint = minX + (totalWidth * CGFloat(index)/8)
             queue.append(xPoint)
         }
     }
@@ -54,12 +56,12 @@ class GameScene: SKScene {
         let yPoint = CGFloat(Int.random(in: 50...100))
         texture.run(SKAction.repeatForever(SKAction.sequence([SKAction.move(to: CGPoint(x: xPoint, y: frame.maxY+100), duration: 1),
                                                     SKAction.run {
-            let imageName = texture.name
-            let xPoint = self.inUseXpoints[imageName!]
-            self.queue.append(xPoint!)
-            let pointIndex = Int.random(in: 0...self.queue.count-1)
-            let nextXpoint = self.queue.remove(at: pointIndex );
-            texture.position = CGPoint(x: nextXpoint, y: self.frame.minY-yPoint)
+           // let imageName = texture.name
+          //  let xPoint = self.inUseXpoints[imageName!]
+         //   self.queue.append(xPoint!)
+         //   let pointIndex = Int.random(in: 0...self.queue.count-1)
+         //   let nextXpoint = self.queue.remove(at: pointIndex );
+            texture.position = CGPoint(x: xPoint, y: self.frame.minY-yPoint)
         }
             ])))
     }
