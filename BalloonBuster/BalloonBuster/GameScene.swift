@@ -54,16 +54,27 @@ class GameScene: SKScene {
     
     func attachMoveAction(texture: SKNode, xPoint: CGFloat){
         let yPoint = CGFloat(Int.random(in: 50...100))
-        texture.run(SKAction.repeatForever(SKAction.sequence([SKAction.move(to: CGPoint(x: xPoint, y: frame.maxY+100), duration: 1),
+        texture.run(SKAction.repeatForever(SKAction.sequence([SKAction.move(to: CGPoint(x: self.inUseXpoints[texture.name!]!, y: frame.maxY+100), duration: 1),
                                                     SKAction.run {
            // let imageName = texture.name
           //  let xPoint = self.inUseXpoints[imageName!]
          //   self.queue.append(xPoint!)
          //   let pointIndex = Int.random(in: 0...self.queue.count-1)
          //   let nextXpoint = self.queue.remove(at: pointIndex );
-            texture.position = CGPoint(x: xPoint, y: self.frame.minY-yPoint)
+            let nextXpoint = self.getXpoint(texture: texture)
+            texture.position = CGPoint(x: nextXpoint, y: self.frame.minY-yPoint)
         }
             ])))
+    }
+    
+    func getXpoint(texture: SKNode) -> CGFloat{
+            let imageName = texture.name
+            let xPoint = self.inUseXpoints[imageName!]
+            self.queue.append(xPoint!)
+            let pointIndex = Int.random(in: 0...self.queue.count-1)
+            let nextXpoint = self.queue.remove(at: pointIndex );
+            self.inUseXpoints[imageName!] = nextXpoint;
+        return nextXpoint;
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
